@@ -49,11 +49,43 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Controleer verliesvoorwaarde
-        if (isOutOfBounds(ball, ballSize)) {
+        if (isOutOfBounds(ball)) {
+            alert('Helaas! Je hebt verloren. Probeer het opnieuw.');
+            resetGame();
+        }
+
+        // Controleer of de bal de rand van het game-container raakt
+        if (checkContainerCollision(ball)) {
             alert('Helaas! Je hebt verloren. Probeer het opnieuw.');
             resetGame();
         }
     });
+
+    // Controleer of de bal buiten het game-container is
+    function isOutOfBounds(ball) {
+        const ballRect = ball.getBoundingClientRect();
+        const containerRect = gameContainer.getBoundingClientRect();
+
+        return (
+            ballRect.top < containerRect.top ||
+            ballRect.bottom > containerRect.bottom ||
+            ballRect.left < containerRect.left ||
+            ballRect.right > containerRect.right
+        );
+    }
+
+    // Controleer of de bal de rand van het game-container raakt
+    function checkContainerCollision(ball) {
+        const ballRect = ball.getBoundingClientRect();
+        const containerRect = gameContainer.getBoundingClientRect();
+
+        return (
+            ballRect.top <= containerRect.top ||
+            ballRect.bottom >= containerRect.bottom ||
+            ballRect.left <= containerRect.left ||
+            ballRect.right >= containerRect.right
+        );
+    }
 
     // Controleer of er een botsing is tussen de bal en het doel
     function checkCollision(ball, goal) {
@@ -63,27 +95,6 @@ document.addEventListener("DOMContentLoaded", function() {
                  ballRect.left > goalRect.right ||
                  ballRect.bottom < goalRect.top ||
                  ballRect.top > goalRect.bottom);
-    }
-
-    // Controleer of de bal buiten het game-container is
-    function isOutOfBounds(ball, size) {
-        const ballRect = ball.getBoundingClientRect();
-        const ballTop = ballRect.top;
-        const ballBottom = ballRect.bottom;
-        const ballLeft = ballRect.left;
-        const ballRight = ballRect.right;
-
-        const containerRect = gameContainer.getBoundingClientRect();
-        const containerTop = containerRect.top;
-        const containerBottom = containerRect.bottom;
-        const containerLeft = containerRect.left;
-        const containerRight = containerRect.right;
-
-        // Controleer of de bal de randen van het game-container raakt
-        return (ballTop < containerTop ||
-                ballBottom > containerBottom ||
-                ballLeft < containerLeft ||
-                ballRight > containerRight);
     }
 
     // Reset het spel door de bal en het doel opnieuw te positioneren
