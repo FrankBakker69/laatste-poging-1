@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Controleer verliesvoorwaarde
-        if (isOutOfBounds(ball)) {
+        if (isOutOfBounds(ball, ballSize)) {
             alert('Helaas! Je hebt verloren. Probeer het opnieuw.');
             resetGame();
         }
@@ -66,10 +66,24 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Controleer of de bal buiten het game-container is
-    function isOutOfBounds(ball) {
+    function isOutOfBounds(ball, size) {
         const ballRect = ball.getBoundingClientRect();
-        return (ballRect.left < 0 || ballRect.right > containerWidth ||
-                ballRect.top < 0 || ballRect.bottom > containerHeight);
+        const ballTop = ballRect.top;
+        const ballBottom = ballRect.bottom;
+        const ballLeft = ballRect.left;
+        const ballRight = ballRect.right;
+
+        const containerRect = gameContainer.getBoundingClientRect();
+        const containerTop = containerRect.top;
+        const containerBottom = containerRect.bottom;
+        const containerLeft = containerRect.left;
+        const containerRight = containerRect.right;
+
+        // Controleer of de bal de randen van het game-container raakt
+        return (ballTop < containerTop ||
+                ballBottom > containerBottom ||
+                ballLeft < containerLeft ||
+                ballRight > containerRight);
     }
 
     // Reset het spel door de bal en het doel opnieuw te positioneren
