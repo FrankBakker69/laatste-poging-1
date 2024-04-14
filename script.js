@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const gameContainer = document.getElementById('game-container');
     const ball = document.getElementById('ball');
     const goal = document.getElementById('goal');
+    let currentLevel = 1;
 
     // Functie om een willekeurige positie binnen het game-container te krijgen
     function getRandomPosition() {
@@ -58,14 +59,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Controleer winvoorwaarde
         if (checkCollision(ball, goal)) {
-            alert('Gefeliciteerd! Je hebt gewonnen!');
-            placeElementsRandomly(); // Plaats elementen opnieuw
+            alert(`Gefeliciteerd! Je hebt level ${currentLevel} gehaald. Op naar level ${currentLevel + 1}!`);
+            currentLevel++;
+            placeElementsRandomly(); // Plaats elementen opnieuw voor het volgende level
         }
 
         // Controleer verliesvoorwaarde (bal raakt de rand van het game-container)
         if (isOutOfBounds(ball)) {
             alert('Helaas! Je hebt verloren. Probeer het opnieuw.');
-            placeElementsRandomly(); // Plaats elementen opnieuw
+            currentLevel = 1; // Reset naar level 1 bij verlies
+            placeElementsRandomly(); // Plaats elementen opnieuw voor een nieuw spel
         }
     });
 
