@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     const gameContainer = document.getElementById('game-container');
+    const ball = document.getElementById('ball');
+    const goal = document.getElementById('goal');
 
     // Functie om een willekeurige positie binnen het game-container te krijgen
     function getRandomPosition() {
@@ -14,17 +16,19 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Plaats de bal en het doel op willekeurige posities binnen het game-container
-    const ball = document.getElementById('ball');
-    const goal = document.getElementById('goal');
+    function placeElementsRandomly() {
+        const ballPosition = getRandomPosition();
+        const goalPosition = getRandomPosition();
 
-    const ballPosition = getRandomPosition();
-    const goalPosition = getRandomPosition();
+        ball.style.top = ballPosition.y + 'px';
+        ball.style.left = ballPosition.x + 'px';
 
-    ball.style.top = ballPosition.y + 'px';
-    ball.style.left = ballPosition.x + 'px';
+        goal.style.top = goalPosition.y + 'px';
+        goal.style.left = goalPosition.x + 'px';
+    }
 
-    goal.style.top = goalPosition.y + 'px';
-    goal.style.left = goalPosition.x + 'px';
+    // Initialiseer het spel door de elementen op willekeurige posities te plaatsen
+    placeElementsRandomly();
 
     // Voeg event listener toe voor balbeweging
     document.addEventListener('keydown', function(event) {
@@ -32,19 +36,20 @@ document.addEventListener("DOMContentLoaded", function() {
         const ballStyle = getComputedStyle(ball);
         let ballLeft = parseInt(ballStyle.left);
         let ballTop = parseInt(ballStyle.top);
+        const step = 10;
 
         switch (key) {
             case 'ArrowUp':
-                ballTop = Math.max(ballTop - 10, 0);
+                ballTop = Math.max(ballTop - step, 0);
                 break;
             case 'ArrowDown':
-                ballTop = Math.min(ballTop + 10, gameContainer.clientHeight - 50);
+                ballTop = Math.min(ballTop + step, gameContainer.clientHeight - ball.clientHeight);
                 break;
             case 'ArrowLeft':
-                ballLeft = Math.max(ballLeft - 10, 0);
+                ballLeft = Math.max(ballLeft - step, 0);
                 break;
             case 'ArrowRight':
-                ballLeft = Math.min(ballLeft + 10, gameContainer.clientWidth - 50);
+                ballLeft = Math.min(ballLeft + step, gameContainer.clientWidth - ball.clientWidth);
                 break;
         }
 
@@ -53,10 +58,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Controleer winvoorwaarde
         if (checkCollision(ball, goal)) {
-            alert('Gefeliciflapchinees! Je hebt gewonnen!');
-            resetGame();
+            alert('Gefeliciteerd! Je hebt gewonnen!');
+            placeElementsRandomly(); // Plaats elementen opnieuw
+        }
+
+        // Controleer verliesvoorwaarde (bal raakt de rand van het game-container)
+        if (isOutOfBounds(ball)) {
+            alert('Helaas! Je hebt verloren. Probeer het opnieuw.');
+            placeElementsRandomly(); // Plaats elementen opnieuw
         }
     });
+
+    // Controleer of de bal de rand van het game-container raakt
+    function isOutOfBounds(ball) {
+        const ballRect = ball.getBoundingClientRect();
+        const containerRect = gameContainer.getBoundingClientRect();
+
+        return (
+            ballRect.top < containerRect.top ||
+            ballRect.bottom > containerRect.bottom ||
+            ballRect.left < containerRect.left ||
+            ballRect.right > containerRect.right
+        );
+    }
 
     // Controleer of er een botsing is tussen de bal en het doel
     function checkCollision(ball, goal) {
@@ -66,17 +90,5 @@ document.addEventListener("DOMContentLoaded", function() {
                  ballRect.left > goalRect.right ||
                  ballRect.bottom < goalRect.top ||
                  ballRect.top > goalRect.bottom);
-    }
-
-    // Reset het spel door de bal en het doel opnieuw te positioneren
-    function resetGame() {
-        const ballPosition = getRandomPosition();
-        const goalPosition = getRandomPosition();
-
-        ball.style.top = ballPosition.y + 'px';
-        ball.style.left = ballPosition.x + 'px';
-
-        goal.style.top = goalPosition.y + 'px';
-        goal.style.left = goalPosition.x + 'px';
     }
 });
