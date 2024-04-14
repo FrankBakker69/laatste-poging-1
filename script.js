@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const gameContainer = document.getElementById('game-container');
     const ball = document.getElementById('ball');
     const goal = document.getElementById('goal');
+    const levelDisplay = document.getElementById('level-display');
     let currentLevel = 1;
 
     // Functie om een willekeurige positie binnen het game-container te krijgen
@@ -30,6 +31,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Initialiseer het spel door de elementen op willekeurige posities te plaatsen
     placeElementsRandomly();
+
+    // Update het niveau-display met het huidige niveau
+    function updateLevelDisplay() {
+        levelDisplay.textContent = `Level: ${currentLevel}`;
+    }
 
     // Voeg event listener toe voor balbeweging
     document.addEventListener('keydown', function(event) {
@@ -60,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Controleer winvoorwaarde
         if (checkCollision(ball, goal)) {
             currentLevel++;
+            updateLevelDisplay(); // Werk het niveau-display bij
             const nextLevel = currentLevel + 1;
             alert(`Gefeliciteerd! Je mag naar level ${currentLevel}. Op naar level ${nextLevel}!`);
             placeElementsRandomly(); // Plaats elementen opnieuw voor het volgende level
@@ -69,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (isOutOfBounds(ball)) {
             alert('Helaas! Je hebt verloren. Probeer het opnieuw.');
             currentLevel = 1; // Reset naar level 1 bij verlies
+            updateLevelDisplay(); // Werk het niveau-display bij
             placeElementsRandomly(); // Plaats elementen opnieuw voor een nieuw spel
         }
     });
@@ -95,4 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
                  ballRect.bottom < goalRect.top ||
                  ballRect.top > goalRect.bottom);
     }
+
+    // Initialiseer het niveau-display
+    updateLevelDisplay();
 });
