@@ -59,8 +59,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Controleer winvoorwaarde
         if (checkCollision(ball, goal)) {
-            alert(`Gefeliciteerd! Je hebt level ${currentLevel} gehaald. Op naar level ${currentLevel + 1}!`);
             currentLevel++;
+            const nextLevel = currentLevel + 1;
+            alert(`Gefeliciteerd! Je mag naar level ${currentLevel}. Op naar level ${nextLevel}!`);
             placeElementsRandomly(); // Plaats elementen opnieuw voor het volgende level
         }
 
